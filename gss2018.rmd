@@ -1,6 +1,6 @@
 ---
 title: "General Social Survey"
-author: "Your Name"
+author: "Chioma Linda Okojie"
 date: "Year 2019"
 output: 
   html_document:
@@ -26,17 +26,14 @@ mydata2 <-filter(mydata,RACE!="IAP" ) %>% droplevels()
 mydata3 <- filter(mydata2,BIGBANG=="True" | BIGBANG=="False",EVOLVED=="True"|EVOLVED=="False",POSTLIFE=="YES"|POSTLIFE=="NO",OWNGUN=="YES"|OWNGUN=="NO",COURTS=="TOO HARSH"|COURTS=="NOT HARSH ENOUGH"|COURTS=="ABOUT RIGHT") %>% droplevels()
 mydata4 <- filter(mydata3,CAPPUN=="FAVOR"|CAPPUN=="OPPOSE",VOTE12=="Voted"|VOTE12=="Did not vote",VOTE16=="Voted"|VOTE16=="Did not vote") %>% droplevels()
 levels(mydata4$VOTE12)[1] <- "voted12"
-levels(mydata4$VOTE12)[2] <- "no in 12"
+levels(mydata4$VOTE12)[2] <- "did not vote in 12"
+
+mydata5 <- filter(mydata4, CAPPUN=="FAVOR" | CAPPUN=="OPPOSE")
 
 ```
 
 
-```{r}
-barchartGC(~VOTE16+VOTE12, data=mydata4, type = "percent") 
-chisqtestGC(~VOTE16+VOTE12, data=mydata4)
-votetab=xtabs(~VOTE16+VOTE12, data=mydata4)
-fisher.test(votetab)
-```
+
 
 # Introduction Question 1
 
@@ -44,10 +41,19 @@ fisher.test(votetab)
 
 This data is from the 2018 General Social Survey. The first blocks of R-code has selected down a subset of the data to just 15 variables. It has further removed unwanted factor levels in much of the data. Examine that code to see what it is doing. First explain what you make out of comparing how people voted in 2012 with 2016.
 
+Comparing the people that voted in 2016 versus the people who voted in 2012. How are the "voted in 2016" and "voted in 2012" related? 
+
+The data is from the 2018 General Social Survey, mydata4.
+
+Research question:
+$H_0:$ voting in 2016 and 2012 are unrelated  
+$H_A:$ voting in 2016 and 2012 are independent
 
 ## Methods
 
 <!--Decide on your methods:  use "variable analysis" or other appropriate descriptors.  Make sure to choose at least one graphical method and at least one numerical method.!-->
+
+Methods used are categorical variables, and a chi-squared test to test the hypothesis that voting in 2016 is/is not independent of voting in 2012
 
 ##Results
 
@@ -55,17 +61,44 @@ This data is from the 2018 General Social Survey. The first blocks of R-code has
 
 ### Descriptive Results
 
+We use a barchart to show the voting trends between 2012 and 2016
+
+
+
 #### Graphical Descriptive Results
 
 <!--Graphical results here.  Make sure to show your code.  Provide appropriate labels for axes, giving units if possible, and provide a good title for the graph, too.  Use the graphical results to describe the patterns if any that exist in the data as focused toward the research question!-->
+
+We use a barchart to show the Voting trends between 2012 and 2016
+```{r}
+barchartGC(~VOTE16+VOTE12, data=mydata4, type = "percent", xlab="voted in 2016") 
+
+```
 
 #### Numerical Descriptive Results
 
 <!--Numerical results go here. Use the numerical results to describe the patterns if any that exist in the data as focused toward the research question!-->
 
+Numerical summary is a cross tabulation:
+```{r}
+xtabs(~VOTE16+VOTE12, data=mydata4)
+```
+
 ### Inferential Results
 
 <!--State hypothesis clearly.  Make sure your discussion of the inferential test covers all the aspects that the test output produces, such as test statistic, p-value etc.  Make a decision about the null hypothesis, explain the assumptions on which the selected test/procedure was based, and why the chosen procedure satisfys the assumptions and is appropriate to answer the research question!-->
+
+```{r}
+chisqtestGC(~VOTE16+VOTE12, data=mydata4)
+votetab=xtabs(~VOTE16+VOTE12, data=mydata4)
+fisher.test(votetab)
+```
+
+The hypothesis was that voting in 2012 is related to voting in 2016 based on the results of the chi-squared test of independence, 
+
+We reject the hypothesis P<0.05, the p-value was 0.so we have enough evidence to reject the null hyposthesis and accept the alternative.
+
+If you voted in 2012 you are likely to vote in 2016 and if you did not vote in 2012 you are less likely to vote in 2016
 
 # Introduction Question 2
 
@@ -73,10 +106,21 @@ This data is from the 2018 General Social Survey. The first blocks of R-code has
 
 Now answer Is belief in the bigbang theory (BIGBANG) independent of belief in the afterlife (POSTLIFE)
 
+The data is from the 2018 General Social Survey mydata3.The research is trying to show the if the belief in the bigbang and belief in the afterlife are related or not.
+The 2 variables here are belief in the bigbang and belief in the afterlife(postlife)
+
+
+The Research Question:   
+
+$H_0:$ belief in the bigbang theory (BIGBANG) is independent of belief in the afterlife (POSTLIFE)  
+$H_A:$ belief in the bigbang theory (BIGBANG) is related to the belief in the afterlife(POSTLIFE)
+
+
 ## Methods
 
 <!--Decide on your methods:  use "variable analysis" or other appropriate descriptors.  Make sure to choose at least one graphical method and at least one numerical method.!-->
 
+Methods used are categorical variables, and a chi-squared test to test the hypothesis that belief in the bigbang theory (BIGBANG) is independent of belief in the afterlife (POSTLIFE)
 ##Results
 
 <!--Divide this section into two sub-sections:  One for your descriptive  results and one for your inferential results.!-->
@@ -87,13 +131,35 @@ Now answer Is belief in the bigbang theory (BIGBANG) independent of belief in th
 
 <!--Graphical results here.  Make sure to show your code.  Provide appropriate labels for axes, giving units if possible, and provide a good title for the graph, too.  Use the graphical results to describe the patterns if any that exist in the data as focused toward the research question!-->
 
+We use a barchart to show the belive in bigbang versus the believe in postlife
+```{r}
+barchartGC(~BIGBANG+POSTLIFE, data=mydata3, type = "percent", xlab="BELIEVE IN POSTLIFE",main= "BELIEVE IN BIGBANG")
+```
+
+
 #### Numerical Descriptive Results
 
 <!--Numerical results go here. Use the numerical results to describe the patterns if any that exist in the data as focused toward the research question!-->
 
+Numerical summary is a cross tabulation:
+```{r}
+xtabs(~BIGBANG+POSTLIFE, data=mydata3)
+```
+
 ### Inferential Results
 
 <!--State hypothesis clearly.  Make sure your discussion of the inferential test covers all the aspects that the test output produces, such as test statistic, p-value etc.  Make a decision about the null hypothesis, explain the assumptions on which the selected test/procedure was based, and why the chosen procedure satisfys the assumptions and is appropriate to answer the research question!-->
+
+
+```{r}
+chisqtestGC(~BIGBANG+POSTLIFE, data=mydata3)
+votetab=xtabs(~BIGBANG+POSTLIFE, data=mydata3)
+fisher.test(votetab)
+```
+The hypothesis is that belief in BIGBANG is related to belief in POSTLIFE based on the chi-square result. P <0.05, P value is 0.0065, so we reject the null hypothesis since we have enough evidence to conclude that the 2 are related. 
+
+If you believe in the bigbang theory you are likely to believe in the postlife and if you do not believe in the bigbang you are less likely to believe in the postlife
+
 
 # Introduction Question 3
 
@@ -101,9 +167,18 @@ Now answer Is belief in the bigbang theory (BIGBANG) independent of belief in th
 
 This time compare the opinion on death penalty (CAPPUN) with opinion on courts (COURTS).
 
+This data came from 2018 General Social Survey, mydata5
+
+Research question:
+
+$H_0:$ opinion on death penalty (CAPPUN) is independent of the opinion on courts (COURTS).
+$H_A;$ opinion on death penalty (CAPPUN) is related to the opinion on courts (COURTS).
+
 ## Methods
 
 <!--Decide on your methods:  use "variable analysis" or other appropriate descriptors.  Make sure to choose at least one graphical method and at least one numerical method.!-->
+
+Methods used are categorical variables, and a chi-squared test to test the hypothesis that opinion on the death penalty theory (CAPPUN) is independent of opinion on court (COURTS)
 
 ##Results
 
@@ -115,16 +190,39 @@ This time compare the opinion on death penalty (CAPPUN) with opinion on courts (
 
 <!--Graphical results here.  Make sure to show your code.  Provide appropriate labels for axes, giving units if possible, and provide a good title for the graph, too.  Use the graphical results to describe the patterns if any that exist in the data as focused toward the research question!-->
 
+We use a barchart to show the opinion(views) on courts versus the view on death penalty
+```{r}
+barchartGC(~CAPPUN+COURTS, data=mydata5, type = "percent", xlab="view on CAPPUN" , main= "view on COURTS")
+```
+
+
+
+
 #### Numerical Descriptive Results
 
 <!--Numerical results go here. Use the numerical results to describe the patterns if any that exist in the data as focused toward the research question!-->
+
+Numerical summary is a cross tabulation:
+```{r}
+xtabs(~CAPPUN+COURTS, data=mydata5)
+```
 
 ### Inferential Results
 
 <!--State hypothesis clearly.  Make sure your discussion of the inferential test covers all the aspects that the test output produces, such as test statistic, p-value etc.  Make a decision about the null hypothesis, explain the assumptions on which the selected test/procedure was based, and why the chosen procedure satisfys the assumptions and is appropriate to answer the research question!-->
 
+```{r}
+chisqtestGC(~CAPPUN+COURTS, data=mydata5)
+votetab=xtabs(~CAPPUN+COURTS, data=mydata5)
+fisher.test(votetab)
+```
 
 # Discussion and Conclusion
 
 <!--Discussion and conclusion here.  If you found a relationship be sure to consider whether the relationship occurs because one of the variavbles causes the other, or whether they perhasps are related for some other reason.  Watch the chapter 6 videos from the GeorgeTown videos collection.!-->
 
+The hypothesis is that the opinion of the courts is related to the opinion on death penalty and vice versa, the two variables are related based on the results of the chi-sqaured test.  
+
+We reject the Null Hypothesis since P=0(P<0.05) since we have strong evidence to conclude that the 2 opinions are related. 
+
+The Opinion on courts is related to the opinion on dealth penalty.A person that believes in the death penalty is likely to believe in the opinion of the courts.
